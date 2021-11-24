@@ -1,0 +1,25 @@
+{
+  "Data": {
+    "Salary": {
+      "Monthly": {
+        "Managerial": {
+          "monthlystart": 30000,
+          "monthlyend": 40000
+        },
+        "Supervisorial": {
+          "monthlystart": 25000,
+          "monthlyend": 28000
+        },
+        "RankAndFile": {
+          "monthlystart": "minimum",
+          "monthlyend": 22000
+        }
+      },
+      "PerDayRate": {
+        "Managerial": 1215.25,
+        "Supervisorial": 898.50,
+        "RankAndFile": 578.75
+      }
+    }
+  }
+}

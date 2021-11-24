@@ -1,0 +1,236 @@
+﻿@model FinalPayrollSystem.Models.EmployeeModel
+@{
+    ViewData["Title"] = "Employee";
+    Layout = "_Layout";
+}
+
+<h1 class="text-center">ADD EMPLOYEE</h1>
+<hr />
+@*<div class="container">*@
+    <div class="row">
+        <div class="col-2">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Records" asp-action="ListOfEmployee">Employee List</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link">Add Employee</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-9">
+            <div class="container-fluid">
+                <p>@ViewBag.Result</p>
+                <p>@ViewBag.Message</p>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form class="g-3" method="post" asp-controller="Records" asp-action="AddEmployee">
+                            <div class="row">
+                                <div class="col-md-2 float-left">
+                                    <label asp-for="employeeid" for="employeeid" class="form-label">Employee ID <br /><i style="font-size: 9px;">("ex: CEB-RWF-000")</i></label>
+                                    <input asp-for="employeeid" type="text" class="form-control" id="employeeid">
+                                    <span asp-validation-for="employeeid" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label asp-for="firstname" for="inputfname" class="form-label">Firstname</label>
+                                    <input asp-for="firstname" type="text" class="form-control" id="inputfname">
+                                    <span asp-validation-for="firstname" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="middlename" for="inputmname" class="form-label">Middlename</label>
+                                    <input asp-for="middlename" type="text" class="form-control" id="inputmname">
+                                    <span asp-validation-for="middlename" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="lastname" for="inputlname" class="form-label">Lastname</label>
+                                    <input asp-for="lastname" type="text" class="form-control" id="inputlname">
+                                    <span asp-validation-for="lastname" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label asp-for="gender" for="selectgender" class="form-label">Gender</label>
+                                    <select asp-for="gender" class="form-control" id="selectgender">
+                                        <option value="" selected>Choose..</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                    <span asp-validation-for="gender" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="birthdate" for="inputbirthdate" class="form-label">Birthdate</label>
+                                    <input asp-for="birthdate" type="date" class="form-control" id="inputbirthdate">
+                                    <span asp-validation-for="birthdate" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="employmentstatus" for="selectemployeeclass" class="form-label">Employment Status</label>
+                                    <select asp-for="employmentstatus" class="form-control" id="selectemployeeclass">
+                                        <option value="" selected>Choose..</option>
+                                        <option value="regular">Regular</option>
+                                        <option value="probationary">Probationary</option>
+                                        <option value="contractual">Contractual</option>
+                                    </select>
+                                    <span asp-validation-for="employmentstatus" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label asp-for="positions" for="inputposition" class="form-label">Position</label>
+                                    <input asp-for="positions" class="form-control" id="inputposition" type="text" list="position" />
+                                    <datalist id="position">
+                                        <option value="" selected>Choose..</option>
+                                        <option value="accounting"></option>
+                                        <option value="manager"></option>
+                                        <option value="supervisor"></option>
+                                        <option value="documentation"></option>
+                                        <option value="import in charge"></option>
+                                        <option value="export in charge"></option>
+                                        <option value="office"></option>
+                                        <option value="billing"></option>
+                                        <option value="documentation and billing"></option>
+                                        <option value="Technical Support"></option>
+                                        <option value="technical and vessel planner"></option>
+                                    </datalist>
+                                    <span asp-validation-for="positions" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label asp-for="department" for="inputdept" class="form-label">Department</label>
+                                    <input asp-for="department" class="form-control" id="inputdept" type="text" list="departments" />
+                                    <datalist id="departments">
+                                        <option value="" selected>Choose..</option>
+                                        <option value="accounting"></option>
+                                        <option value="technical"></option>
+                                        <option value="finance"></option>
+                                        <option value="sales"></option>
+                                        <option value="marketing"></option>
+                                        <option value="audit"></option>
+                                    </datalist>
+                                    <span asp-validation-for="positions" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label asp-for="datehired" for="inputdatehired" class="form-label">Date Hired</label>
+                                    <input asp-for="datehired" type="date" class="form-control" id="inputdatehired">
+                                    <span asp-validation-for="datehired" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Employee Status</label>
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-md-6 form-check">
+                                                <input asp-for="employeestatus" class="form-check-input" type="radio" name="employeestatus" id="radioactive" value="active">
+                                                <label asp-for="employeestatus" class="form-check-label" for="radioactive">
+                                                    Active
+                                                </label>
+                                            </div>
+                                            <div class="col-md-6 form-check">
+                                                <input asp-for="employeestatus" class="form-check-input" type="radio" name="employeestatus" id="radioainctive" value="inactive">
+                                                <label asp-for="employeestatus" class="form-check-label" for="radioainctive">
+                                                    Inactive
+                                                </label>
+                                            </div>
+                                            <span asp-validation-for="employeestatus" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label asp-for="barangays" for="inputbrgy" class="form-label">Barangay</label>
+                                    <input asp-for="barangays" class="form-control" id="inputbrgy" type="text" list="barangay" />
+                                    <datalist id="barangay">
+                                        <option value="Bulacao"></option>
+                                        <option value="Pardo"></option>
+                                        <option value="Basak"></option>
+                                        <option value="Mambaling"></option>
+                                        <option value="Punta Princesa"></option>
+                                        <option value="Tisa"></option>
+                                        <option value="Samba I"></option>
+                                        <option value="Samba II"></option>
+                                        <option value="Taboan"></option>
+                                        <option value="Sikatuna"></option>
+                                        <option value="Lorega"></option>
+                                        <option value="San Nicholas"></option>
+                                    </datalist>
+                                    <span asp-validation-for="barangays" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label asp-for="towns" for="inputtown" class="form-label">Town</label>
+                                    <input asp-for="towns" class="form-control" id="inputtown" type="text" list="town" />
+                                    <datalist id="town">
+                                        <option value="Alcantara"></option>
+                                        <option value="Alcoy"></option>
+                                        <option value="Alegria"></option>
+                                        <option value="Aloguinsan"></option>
+                                        <option value="Argao"></option>
+                                        <option value="Asturias"></option>
+                                        <option value="Badian"></option>
+                                        <option value="Balamban"></option>
+                                        <option value="Bantayan"></option>
+                                        <option value="Barili"></option>
+                                        <option value="Boljoon"></option>
+                                        <option value="Borbon"></option>
+                                        <option value="Carmen"></option>
+                                        <option value="Catmon"></option>
+                                        <option value="Compostela"></option>
+                                        <option value="Consolacion"></option>
+                                        <option value="Cordova"></option>
+                                        <option value="Daanbantayan"></option>
+                                        <option value="Dalaguete"></option>
+                                        <option value="Dumanjug"></option>
+                                        <option value="Ginatilan"></option>
+                                        <option value="Liloan"></option>
+                                        <option value="Madridejos"></option>
+                                        <option value="Malabuyoc"></option>
+                                        <option value="Medellin"></option>
+                                        <option value="Minglanilla"></option>
+                                        <option value="Moalboal"></option>
+                                        <option value="Oslob"></option>
+                                        <option value="Pilar"></option>
+                                        <option value="Pinamungajan"></option>
+                                        <option value="San Fernando"></option>
+                                        <option value="San Remigio"></option>
+                                        <option value="Sibonga"></option>
+                                        <option value="Tabogon"></option>
+                                        <option value="Tabuelan"></option>
+                                        <option value="Tuburan"></option>
+                                    </datalist>
+                                    <span asp-validation-for="towns" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label asp-for="cities" for="inputcity" class="form-label">City</label>
+                                    <input asp-for="cities" class="form-control" id="inputcity" type="text" list="city" />
+                                    <datalist id="city">
+                                        <option value="Cebu City"></option>
+                                        <option value="Mandaue City"></option>
+                                        <option value="Lapu-lapu City"></option>
+                                        <option value="Talisay City"></option>
+                                    </datalist>
+                                    <span asp-validation-for="cities" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <label asp-for="provinces" for="inputprovince" class="form-label">Province</label>
+                                    <input asp-for="provinces" class="form-control" id="inputprovince" type="text" list="province" />
+                                    <datalist id="province">
+                                        <option value="Cebu"></option>
+                                        <option value="Bohol"></option>
+                                        <option value="Leyte"></option>
+                                    </datalist>
+                                    <span asp-validation-for="provinces" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row" style="padding: 10px;">
+                                <div class="col-lg-12 text-right">
+                                    <button type="submit" class="btn btn-primary">Add Employee</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@*</div>*@
+<br />
+

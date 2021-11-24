@@ -1,0 +1,102 @@
+﻿@model FinalPayrollSystem.Models.RatesModel
+
+@{
+    ViewData["Title"] = "AddRates";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h1 class="text-center">ADD RATES</h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-2">
+            <form asp-action="AddRates">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="employeeid">Employee ID</label>
+                    <input id="employeeID" asp-for="employeeid" class="form-control" list="empiddtlist" />
+                    <datalist id="empiddtlist">
+                    </datalist>
+                    <span asp-validation-for="employeeid" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="employeename"></label>
+                    <input id="empname" asp-for="employeename" class="form-control" />
+                    <span asp-validation-for="employeename" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="paytype" class="control-label"></label>
+                    <input asp-for="paytype" class="form-control" />
+                    <span asp-validation-for="paytype" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="salary" class="control-label"></label>
+                    <input asp-for="salary" class="form-control" />
+                    <span asp-validation-for="salary" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="dividedby" class="control-label"></label>
+                    <input asp-for="dividedby" class="form-control" />
+                    <span asp-validation-for="dividedby" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="multipliedby" class="control-label"></label>
+                    <input asp-for="multipliedby" class="form-control" />
+                    <span asp-validation-for="multipliedby" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+        <div class="col-md-10">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row text-right">
+                        <div class="col-md-8"></div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Search employees rates" aria-describedby="button-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                <div class="col-12">
+                    <table id="dataTable" class="table table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.employeeid)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.rateid)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.salary)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.paytype)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.dividedby)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.multipliedby)
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/employeeid-datalist.js"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

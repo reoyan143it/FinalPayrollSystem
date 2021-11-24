@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FinalPayrollSystem</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RollwayPayroll</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 nav-pills">
+                        <li class="nav-item">
+                            <a tabindex="-1" class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a tabindex="-1" class="nav-link text-dark dropdown-toggle" role="button" data-toggle="dropdown" style="cursor: pointer;" aria-haspopup="true" aria-expanded="false">Records </a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Records" asp-action="ListOfEmployee">Employees</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Records" asp-action="AddRates">Rate</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Leaves</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a tabindex="-1" class="nav-link text-dark dropdown-toggle" role="button" data-toggle="dropdown" style="cursor: pointer;" aria-haspopup="true" aria-expanded="false">Maintenance</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Barangay</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Town</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">City</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Province</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Department</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Position</a>
+                                </li>
+                                <li class="dropdown-divider"></li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Payroll Calendar</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a tabindex="-1" class="nav-link text-dark dropdown-toggle" role="button" data-toggle="dropdown" style="cursor: pointer;" aria-haspopup="true" aria-expanded="false">Transaction</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Loan Application</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Loan Deduction</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Other Deduction</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Allowance</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Payroll Adjustment</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a tabindex="-1" class="nav-link text-dark dropdown-toggle" role="button" data-toggle="dropdown" style="cursor: pointer;" aria-haspopup="true" aria-expanded="false">DTR</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Attendance</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Holidays</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Schedules</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Time Policy</a>
+                                </li>
+                                <li class="dropdown-divider"></li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Upload DTR from File</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a tabindex="-1" class="nav-link text-dark dropdown-toggle" role="button" data-toggle="dropdown" style="cursor: pointer;" aria-haspopup="true" aria-expanded="false">Payroll</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Payroll Overview</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Generate Payslip</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Set up Payslip</a>
+                                </li>
+                                <li class="dropdown-divider"></li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Upload DTR from File</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a tabindex="-1" class="nav-link text-dark dropdown-toggle" role="button" data-toggle="dropdown" style="cursor: pointer;" aria-haspopup="true" aria-expanded="false">Reports</a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-item dropright">
+                                    <a tabindex="-1" class="submenu nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Employee List Reports</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="dropdown-item">
+                                            by Department
+                                        </li>
+                                        <li class="dropdown-item">
+                                            by Section
+                                        </li>
+                                        <li class="dropdown-item">
+                                            by Shift
+                                        </li>
+                                        <li class="dropdown-item">
+                                            by Position
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-item dropright">
+                                    <a tabindex="-1" class="submenu nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Attendance Reports</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="dropdown-item">
+                                            by Department
+                                        </li>
+                                        <li class="dropdown-item">
+                                            by Section
+                                        </li>
+                                        <li class="dropdown-item">
+                                            by Shift
+                                        </li>
+                                        <li class="dropdown-item">
+                                            by Position
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-item dropright">
+                                    <a tabindex="-1" class="submenu nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Payroll List Reports</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="dropdown-item">
+                                            by Department
+                                        </li>
+                                        <li class="dropdown-item">
+                                            by Section
+                                        </li>
+                                        <li class="dropdown-item">
+                                            by Shift
+                                        </li>
+                                        <li class="dropdown-item">
+                                            by Position
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-divider"></li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Loan Application Reports</a>
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a tabindex="-1" class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Loan History Reports</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - FinalPayrollSystem - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

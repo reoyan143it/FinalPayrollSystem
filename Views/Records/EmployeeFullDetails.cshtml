@@ -1,0 +1,127 @@
+﻿@model FinalPayrollSystem.Models.EmployeeModel
+
+@{
+    ViewData["Title"] = "Employee Full Details";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Records" asp-action="ListOfEmployee">Employee List</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" asp-controller="Records" asp-action="EmployeeFullDetails">Add Employee</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-9">
+            <h1>Employee Detailed Information</h1>
+
+            <div>
+                <hr />
+                <dl class="row">
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.employeeid) :
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.employeeid)
+                    </dd>
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.firstname) :
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.firstname)
+                    </dd>
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.middlename) :
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.middlename)
+                    </dd>
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.lastname) :
+                    </dt>
+                    <dd class="col-sm-9 text-break">
+                        @Html.DisplayFor(model => model.lastname)
+                    </dd>
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.gender) :
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.gender)
+                    </dd>
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.birthdate) :
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.birthdate)
+                    </dd>
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.datehired) :
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.datehired)
+                    </dd>
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.employmentstatus) :
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.employmentstatus)
+                    </dd>
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.employeestatus) :
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.employeestatus)
+                    </dd>
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.barangays) :
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.barangays)
+                    </dd>
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.towns) :
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.towns)
+                    </dd>
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.cities) :
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.cities)
+                    </dd>
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.provinces) :
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.provinces)
+                    </dd>
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.department) :
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.department)
+                    </dd>
+                    <dt class="col-sm-3 text-break">
+                        @Html.DisplayNameFor(model => model.positions) :
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.positions)
+                    </dd>
+                </dl>
+            </div>
+            <div>
+                @Html.ActionLink("Edit", "EditEmployeeDetails", new { employeeID = Model.employeeid }, new { @class="btn btn-primary" }) |
+                <a class="btn btn-outline-dark" asp-controller="Records" asp-action="ListOfEmployee">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

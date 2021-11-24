@@ -1,0 +1,116 @@
+﻿@model FinalPayrollSystem.Models.EmployeeModel
+
+@{
+    ViewData["Title"] = "EditEmployeeDetails";
+    Layout = "_Layout";
+}
+
+
+
+<div class="container">
+    <h1>Edit Employee Details</h1>
+    <hr />
+    <span id="viewbag-result">@ViewBag.Result</span>
+    <form class="row" asp-action="EditEmployeeDetails">
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="employeeid" class="control-label"></label>
+                <input asp-for="employeeid" class="form-control" readonly/>
+                <span asp-validation-for="employeeid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="firstname" class="control-label"></label>
+                <input asp-for="firstname" class="form-control" />
+                <span asp-validation-for="firstname" class="text-danger">@ViewBag.fnameExisted</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="middlename" class="control-label"></label>
+                <input asp-for="middlename" class="form-control" />
+                <span asp-validation-for="middlename" class="text-danger">@ViewBag.mnameExisted</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="lastname" class="control-label"></label>
+                <input asp-for="lastname" class="form-control" />
+                <span asp-validation-for="lastname" class="text-danger">@ViewBag.lnameExisted</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="gender" class="control-label"></label><br />
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" asp-for="gender" type="radio" value="male" id="inlineRadio1">
+                    <label class="form-check-label" for="inlineRadio1">Male</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" asp-for="gender" id="inlineRadio2" value="female">
+                    <label class="form-check-label" for="inlineRadio2">Female</label>
+                </div>
+                <span asp-validation-for="gender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="birthdate" class="control-label"></label>
+                <input asp-for="birthdate" class="form-control" />
+                <span asp-validation-for="birthdate" class="text-danger">@ViewBag.Existed</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="datehired" class="control-label"></label>
+                <input asp-for="datehired" class="form-control" />
+                <span asp-validation-for="datehired" class="text-danger">@ViewBag.Existed</span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="employmentstatus" class="control-label"></label>
+                <input asp-for="employmentstatus" class="form-control" />
+                <span asp-validation-for="employmentstatus" class="text-danger">@ViewBag.Existed</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="employeestatus" class="control-label"></label>
+                <input asp-for="employeestatus" class="form-control" />
+                <span asp-validation-for="employeestatus" class="text-danger">@ViewBag.Existed</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="barangays" class="control-label"></label>
+                <input asp-for="barangays" class="form-control" />
+                <span asp-validation-for="barangays" class="text-danger">@ViewBag.Existed</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="towns" class="control-label"></label>
+                <input asp-for="towns" class="form-control" />
+                <span asp-validation-for="towns" class="text-danger">@ViewBag.Existed</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="cities" class="control-label"></label>
+                <input asp-for="cities" class="form-control" />
+                <span asp-validation-for="cities" class="text-danger">@ViewBag.Existed</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="provinces" class="control-label"></label>
+                <input asp-for="provinces" class="form-control" />
+                <span asp-validation-for="provinces" class="text-danger">@ViewBag.Existed</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="department" class="control-label"></label>
+                <input asp-for="department" class="form-control" />
+                <span asp-validation-for="department" class="text-danger">@ViewBag.Existed</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="positions" class="control-label"></label>
+                <input asp-for="positions" class="form-control" />
+                <span asp-validation-for="positions" class="text-danger">@ViewBag.Existed</span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="row text-right">
+                <div class="col-md-9"></div>
+                <div class="form-group col-md-3">
+                    <input type="submit" value="Save" class="btn btn-primary d-inline" id="submit" />
+                    <a class="btn btn-outline-dark" asp-controller="Records" asp-action="ListOfEmployee">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
