@@ -11,6 +11,8 @@
 
     <div class="row">
         <div class="col-md-2">
+            <h4>@ViewBag.Result</h4>
+            <h4>@ViewBag.Error</h4>
             <form asp-action="AddRates">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -28,7 +30,12 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="paytype" class="control-label"></label>
-                    <input asp-for="paytype" class="form-control" />
+                    <input asp-for="paytype" class="form-control" list="paytypelist" />
+                    <datalist id="paytypelist">
+                        <option value="Monthly"></option>
+                        <option value="Semi-Monthly"></option>
+                        <option value="Daily Rate"></option>
+                    </datalist>
                     <span asp-validation-for="paytype" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -67,14 +74,15 @@
                         </div>
                     </div>
                 <div class="col-12">
+                    <h4 id="error"></h4>
                     <table id="dataTable" class="table table-striped">
                         <thead class="thead-light">
                             <tr>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.employeeid)
+                                    @Html.DisplayNameFor(model => model.rateid)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.rateid)
+                                    @Html.DisplayNameFor(model => model.employeeid)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.salary)
@@ -90,6 +98,9 @@
                                 </th>
                             </tr>
                         </thead>
+                        <tbody id="display-rates">
+
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -97,6 +108,7 @@
     </div>
 </div>
 @section Scripts {
+    <script src="~/js/display-rates.js"></script>
     <script src="~/js/employeeid-datalist.js"></script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

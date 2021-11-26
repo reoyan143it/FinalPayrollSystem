@@ -492,10 +492,92 @@ namespace FinalPayrollSystem.Controllers
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 return Redirect("/Login/Index");
             }
-
+            
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddRates(RatesModel rates)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    MySqlConnection dDBcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
+                    await dDBcon.OpenAsync();
+                    string dcommandtext = $"SELECT * FROM rates WHERE employeeid='{rates.employeeid}'";
+                    await using var dcmd = new MySqlCommand(dcommandtext, dDBcon);
+                    await using var reader = await dcmd.ExecuteReaderAsync();
+
+                    if(await reader.ReadAsync() == true)
+                    {
+                        ViewBag.Result = "Already added to the system!";
+                    }
+                    else
+                    {
+                        try
+                        {
+                            MySqlConnection dbcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
+                            await dbcon.OpenAsync();
+                            string commandtext = $@"INSERT INTO rates(rateid,paytype,salary,dividedby,multipliedby,employeeid,addedby,dateadded)
+                                          VALUES (null,'{rates.paytype}',{rates.salary},{rates.dividedby},{rates.multipliedby},'{rates.employeeid}','{User.Identity.Name}','{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}')";
+
+                            await using var cmd = new MySqlCommand(commandtext, dbcon);
+
+                            if (await cmd.ExecuteNonQueryAsync() > 0)
+                            {
+                                ViewBag.Result = "Successfully Added";
+                            }
+                            else
+                            {
+                                ViewBag.Result = "Data not saved to database!";
+                            }
+
+                            await dbcon.CloseAsync();
+                            await dbcon.DisposeAsync();
+                        }
+                        catch (Exception e)
+                        {
+                            ViewBag.Error = e.Message;
+                        }
+                    }
+                        
+                }catch(Exception e)
+                {
+                    ViewBag.Error = "Error: " + e.Message;
+                }
+                    
+            }
+            return View();
+                
+        }
+
+        public JsonResult DispRates()
+        {
+            List<RatesModel> rateslist = new List<RatesModel>();
+
+            MySqlConnection dbcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
+            dbcon.Open();
+            string commandtext = "SELECT * FROM rates";
+            var cmd = new MySqlCommand(commandtext, dbcon);
+            var reader = cmd.ExecuteReader();
+
+            while(reader.Read())
+            {
+                rateslist.Add(new RatesModel() {
+                    rateid = Convert.ToInt32(reader["rateid"]),
+                    employeeid = reader["employeeid"].ToString(),
+                    salary = Convert.ToDecimal(reader["salary"]),
+                    paytype = reader["paytype"].ToString(),
+                    dividedby = Convert.ToDecimal(reader["dividedby"]),
+                    multipliedby = Convert.ToDouble(reader["multipliedby"])
+                });
+            }
+            dbcon.Close();
+            dbcon.Dispose();
+
+            return Json(rateslist);
+        }
         //[HttpPost]
         //public async Task<IActionResult> AddRate(RatesModel rtmodel)
         //{
@@ -511,17 +593,17 @@ namespace FinalPayrollSystem.Controllers
 
 
         // ADD THE EMPLOYEE ID TO THE DATALIST OF EMPLOYEE ID IN RATES
-        public JsonResult dtEmployeeID()
+        public async Task<JsonResult> dtEmployeeID()
         {
             List<EmployeeModel> emplist = new List<EmployeeModel>();
             EmployeeModel empl = new EmployeeModel();
 
             MySqlConnection dbcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
-            dbcon.Open();
+            await dbcon.OpenAsync();
             string commandtext = "SELECT employeeid,firstname,lastname FROM employees";
-            var cmd = new MySqlCommand(commandtext, dbcon);
-            var reader = cmd.ExecuteReader();
-            while(reader.Read())
+            await using var cmd = new MySqlCommand(commandtext, dbcon);
+            await using var reader = await cmd.ExecuteReaderAsync();
+            while(await reader.ReadAsync())
             {
                 emplist.Add(new EmployeeModel()
                 {
@@ -530,8 +612,8 @@ namespace FinalPayrollSystem.Controllers
                     lastname = reader["lastname"].ToString()
                 });
             }
-            dbcon.Close();
-            dbcon.Dispose();
+            await dbcon.CloseAsync();
+            await dbcon.DisposeAsync();
 
             return Json(emplist);
         }

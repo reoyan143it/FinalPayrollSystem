@@ -8,7 +8,6 @@ $(document).ready(function () {
         url: "/Records/dtEmployeeID",
         dataType: "json",
         success: function (response) {
-            console.log(response);
             $(response).each(function (index, emp) {
                 $("#empiddtlist").append("<option value='"+emp.employeeid+"'></option>");
             });
@@ -21,7 +20,6 @@ $(document).ready(function () {
             url: "/Records/valEmpName?employeeID=" + $("#employeeID").val() + "",
             dataType: "json",
             success: function (response) {
-                console.log(response);
                 $(response).each(function (index, emp) {
                     $("#empname").val(emp.firstname+" "+emp.lastname);
                 });

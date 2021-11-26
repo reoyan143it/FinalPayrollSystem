@@ -8,7 +8,7 @@ namespace FinalPayrollSystem.Models
 {
     public class RatesModel
     {
-        public object rateid { get; set; } = null;
+        public int rateid { get; set; }
 
         [Required()]
         public string paytype { get; set; }
@@ -17,15 +17,15 @@ namespace FinalPayrollSystem.Models
         public decimal salary { get; set; }
 
         [Required()]
-        public string dividedby { get; set; }
+        public decimal dividedby { get; set; }
 
         [Required()]
-        public string multipliedby { get; set; }
+        public double multipliedby { get; set; }
 
         [Required()]
         public string employeeid { get; set; }
 
         [Required()]
-        public string employeename { get; set; }
+        public string employeename { get; set; } // NOT IN THE TABLE OF RATES, ONLY EMPLOYEE ID WILL BE SAVED
     }
 }
