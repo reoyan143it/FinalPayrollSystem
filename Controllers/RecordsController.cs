@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Newtonsoft.Json.Serialization;
 using System.Web;
+using Newtonsoft.Json.Linq;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace FinalPayrollSystem.Controllers
 {
@@ -20,6 +23,7 @@ namespace FinalPayrollSystem.Controllers
     {
         IConfiguration _configuration; // GET THE CONNECTION STRING
         List<EmployeeModel> employeelist = new List<EmployeeModel>();
+        List<RatesModel> rateslist = new List<RatesModel>();
         public RecordsController(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -492,8 +496,32 @@ namespace FinalPayrollSystem.Controllers
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 return Redirect("/Login/Index");
             }
-            
-            return View();
+
+            RatesModel rlist = new RatesModel();
+            MySqlConnection dbcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
+            await dbcon.OpenAsync();
+            string commandtext = "SELECT * FROM rates";
+            await using var cmd = new MySqlCommand(commandtext, dbcon);
+            await using var reader = cmd.ExecuteReader();
+
+            while (await reader.ReadAsync())
+            {
+                rateslist.Add(new RatesModel()
+                {
+                    rateid = Convert.ToInt32(reader["rateid"]),
+                    employeeid = reader["employeeid"].ToString(),
+                    salary = Convert.ToDecimal(reader["salary"]),
+                    paytype = reader["paytype"].ToString(),
+                    employeename = EmployeeName(reader["employeeid"].ToString())
+                });
+            }
+            await reader.CloseAsync();
+            await reader.DisposeAsync();
+            await dbcon.CloseAsync();
+            await dbcon.DisposeAsync();
+
+            rlist.rateslist = rateslist.ToList();
+            return View(rlist);
         }
 
         [HttpPost]
@@ -503,6 +531,7 @@ namespace FinalPayrollSystem.Controllers
             {
                 try
                 {
+
                     MySqlConnection dDBcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
                     await dDBcon.OpenAsync();
                     string dcommandtext = $"SELECT * FROM rates WHERE employeeid='{rates.employeeid}'";
@@ -511,26 +540,34 @@ namespace FinalPayrollSystem.Controllers
 
                     if(await reader.ReadAsync() == true)
                     {
-                        ViewBag.Result = "Already added to the system!";
+                        TempData["Result"] = "Already added to the system!";
+                        await reader.CloseAsync();
+                        await reader.DisposeAsync();
+                        await dDBcon.CloseAsync();
+                        await dDBcon.DisposeAsync();
                     }
                     else
                     {
+                        await reader.CloseAsync();
+                        await reader.DisposeAsync();
+                        await dDBcon.CloseAsync();
+                        await dDBcon.DisposeAsync();
                         try
                         {
                             MySqlConnection dbcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
                             await dbcon.OpenAsync();
-                            string commandtext = $@"INSERT INTO rates(rateid,paytype,salary,dividedby,multipliedby,employeeid,addedby,dateadded)
-                                          VALUES (null,'{rates.paytype}',{rates.salary},{rates.dividedby},{rates.multipliedby},'{rates.employeeid}','{User.Identity.Name}','{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}')";
+                            string commandtext = $@"INSERT INTO rates(rateid,paytype,salary,employeeid,addedby,dateadded)
+                                          VALUES (null,'{rates.paytype}',{rates.salary},'{rates.employeeid}','{User.Identity.Name}','{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}')";
 
                             await using var cmd = new MySqlCommand(commandtext, dbcon);
 
                             if (await cmd.ExecuteNonQueryAsync() > 0)
                             {
-                                ViewBag.Result = "Successfully Added";
+                                TempData["Result"] = "Successfully Added";
                             }
                             else
                             {
-                                ViewBag.Result = "Data not saved to database!";
+                                TempData["Result"] = "Data not saved to database!";
                             }
 
                             await dbcon.CloseAsync();
@@ -541,55 +578,127 @@ namespace FinalPayrollSystem.Controllers
                             ViewBag.Error = e.Message;
                         }
                     }
+                    
                         
                 }catch(Exception e)
                 {
                     ViewBag.Error = "Error: " + e.Message;
                 }
-                    
             }
-            return View();
-                
+            return Redirect("/Records/AddRates");
         }
 
-        public JsonResult DispRates()
+        [HttpPost]
+        public async Task<IActionResult> DeleteRate(int rateID)
         {
-            List<RatesModel> rateslist = new List<RatesModel>();
-
-            MySqlConnection dbcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
-            dbcon.Open();
-            string commandtext = "SELECT * FROM rates";
-            var cmd = new MySqlCommand(commandtext, dbcon);
-            var reader = cmd.ExecuteReader();
-
-            while(reader.Read())
+            try
             {
-                rateslist.Add(new RatesModel() {
-                    rateid = Convert.ToInt32(reader["rateid"]),
-                    employeeid = reader["employeeid"].ToString(),
-                    salary = Convert.ToDecimal(reader["salary"]),
-                    paytype = reader["paytype"].ToString(),
-                    dividedby = Convert.ToDecimal(reader["dividedby"]),
-                    multipliedby = Convert.ToDouble(reader["multipliedby"])
-                });
+                MySqlConnection dbcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
+                await dbcon.OpenAsync();
+                string commandtext = $"SELECT * FROM rates WHERE rateid={rateID}";
+                await using var cmd = new MySqlCommand(commandtext, dbcon);
+                await using var reader = await cmd.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync() == true)
+                {
+                    await dbcon.CloseAsync();
+                    await dbcon.DisposeAsync();
+                    try
+                    {
+                        MySqlConnection dbcon1 = new MySqlConnection(_configuration.GetConnectionString("Default"));
+                        await dbcon1.OpenAsync();
+                        string commandtext1 = $"DELETE FROM rates WHERE rateid='{rateID}'";
+                        await using var cmd1 = new MySqlCommand(commandtext1, dbcon1);
+                        await using var reader1 = await cmd1.ExecuteReaderAsync();
+                        await reader1.ReadAsync();
+
+                        if (reader1.RecordsAffected > 0)
+                        {
+                            TempData["Result"] = "Successfully Deleted!";
+                        }
+                        else
+                        {
+                            TempData["Result"] = "Failed to delete the data!";
+                        }
+                        await reader1.CloseAsync();
+                        await reader1.DisposeAsync();
+                        await dbcon1.CloseAsync();
+                        await dbcon1.DisposeAsync();
+                    }catch(Exception e)
+                    {
+                        TempData["Error"] = "Error: " + e.Message;
+                    }
+                    
+                }
+                else
+                {
+                    TempData["Result"] = "Data not Exist!";
+                }
+            }catch(Exception e)
+            {
+                TempData["Error"] = "Error: " + e.Message;
             }
-            dbcon.Close();
-            dbcon.Dispose();
+            
 
-            return Json(rateslist);
+
+            return Redirect("/Records/AddRates");
         }
-        //[HttpPost]
-        //public async Task<IActionResult> AddRate(RatesModel rtmodel)
-        //{
-        //    if (!User.Identity.IsAuthenticated)
-        //    {
-        //        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        //        return Redirect("/Login/Index");
-        //    }
 
-        //    MySqlConnection dbcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
-        //    await dbcon.OpenAsync();
-        //}
+        public async Task<string> EditRate(int rateID, string colnm, string inpval)
+        {
+            string response = "";
+            try
+            {
+                MySqlConnection dbcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
+                await dbcon.OpenAsync();
+                string commandtext = $"SELECT * FROM rates WHERE rateid={rateID}";
+                await using var cmd = new MySqlCommand(commandtext, dbcon);
+                await using var reader = await cmd.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync() == true)
+                {
+                    await dbcon.CloseAsync();
+                    await dbcon.DisposeAsync();
+                    try
+                    {
+                        MySqlConnection dbcon1 = new MySqlConnection(_configuration.GetConnectionString("Default"));
+                        await dbcon1.OpenAsync();
+                        string commandtext1 = $"UPDATE rates SET {colnm}='{inpval}' WHERE rateid='{rateID}'";
+                        await using var cmd1 = new MySqlCommand(commandtext1, dbcon1);
+                        await using var reader1 = await cmd1.ExecuteReaderAsync();
+                        await reader1.ReadAsync();
+
+                        if (reader1.RecordsAffected > 0)
+                        {
+                            response = "Successfully Updated!";
+                        }
+                        else
+                        {
+                            response = "Failed to delete the data!";
+                        }
+                        await reader1.CloseAsync();
+                        await reader1.DisposeAsync();
+                        await dbcon1.CloseAsync();
+                        await dbcon1.DisposeAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        response = "Error: " + e.Message;
+                    }
+
+                }
+                else
+                {
+                    response = "Data not Exist!";
+                }
+            }
+            catch (Exception e)
+            {
+                response = "Error: " + e.Message;
+            }
+
+            return response;
+        }
 
 
         // ADD THE EMPLOYEE ID TO THE DATALIST OF EMPLOYEE ID IN RATES
@@ -644,6 +753,29 @@ namespace FinalPayrollSystem.Controllers
             return Json(emplist);
         }
 
+        // RETURN THE STRING EMPLOYEE NAME OF THE SPECIFIED EMPLOYEE ID PARAMETER
+        public string EmployeeName(string employeeID)
+        {
+            string employeename = "";
+
+            MySqlConnection dbcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
+            dbcon.Open();
+            string commandtext = $"SELECT firstname,lastname FROM employees WHERE employeeid='{employeeID}'";
+            var cmd = new MySqlCommand(commandtext, dbcon);
+            var reader = cmd.ExecuteReader();
+            if(reader.Read() == true)
+            {
+               employeename = reader["firstname"].ToString() + " " + reader["lastname"].ToString();
+            }
+            else
+            {
+
+            }
+            dbcon.Close();
+            dbcon.Dispose();
+
+            return employeename;
+        }
 
 
 

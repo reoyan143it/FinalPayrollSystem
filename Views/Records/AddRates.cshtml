@@ -5,13 +5,15 @@
     Layout = "_Layout";
 }
 
+
+
 <div class="container">
-    <h1 class="text-center">ADD RATES</h1>
+    <h1 class="text-center">EMPLOYEE'S SALARY</h1>
     <hr />
 
     <div class="row">
         <div class="col-md-2">
-            <h4>@ViewBag.Result</h4>
+            <h4>@TempData["Result"]</h4>
             <h4>@ViewBag.Error</h4>
             <form asp-action="AddRates">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -44,16 +46,6 @@
                     <span asp-validation-for="salary" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="dividedby" class="control-label"></label>
-                    <input asp-for="dividedby" class="form-control" />
-                    <span asp-validation-for="dividedby" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="multipliedby" class="control-label"></label>
-                    <input asp-for="multipliedby" class="form-control" />
-                    <span asp-validation-for="multipliedby" class="text-danger"></span>
-                </div>
-                <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-primary" />
                 </div>
             </form>
@@ -65,14 +57,14 @@
                         <div class="col-md-8"></div>
                         <div class="col-md-4">
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Search employees rates" aria-describedby="button-addon2">
+                                <input type="text" class="form-control" placeholder="Search employee here.." aria-label="Search employees rates" aria-describedby="button-addon2">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
                                 </div>
                             </div>
                         </div>
-                        </div>
                     </div>
+                </div>
                 <div class="col-12">
                     <h4 id="error"></h4>
                     <table id="dataTable" class="table table-striped">
@@ -85,21 +77,37 @@
                                     @Html.DisplayNameFor(model => model.employeeid)
                                 </th>
                                 <th>
+                                    @Html.DisplayNameFor(model => model.employeename)
+                                </th>
+                                <th>
                                     @Html.DisplayNameFor(model => model.salary)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.paytype)
                                 </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.dividedby)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.multipliedby)
-                                </th>
+                                <th></th>
                             </tr>
                         </thead>
-                        <tbody id="display-rates">
-
+                        <tbody id="td-items">
+                            @{
+                                
+                                foreach (var item in Model.rateslist)
+                                {
+                                    <tr id="@item.rateid">
+                                        <th>@Html.DisplayFor(model => item.rateid)</th>
+                                        <th>@Html.DisplayFor(model => item.employeeid)</th>
+                                        <th>@Html.DisplayFor(model => item.employeename)</th>
+                                        <td id="salary">@Html.DisplayFor(model => item.salary)</td>
+                                        <td id="paytype">@Html.DisplayFor(model => item.paytype)</td>
+                                        <th>
+                                            <form method="post" asp-controller="Records" asp-action="DeleteRate">
+                                                <input asp-for="@Model.rateid" value="@item.rateid" type="hidden" />
+                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this?')">Delete</button>
+                                            </form>
+                                        </th>
+                                    </tr>
+                                }
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -108,7 +116,7 @@
     </div>
 </div>
 @section Scripts {
-    <script src="~/js/display-rates.js"></script>
+    <script src="~/js/edit-rate.js"></script>
     <script src="~/js/employeeid-datalist.js"></script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

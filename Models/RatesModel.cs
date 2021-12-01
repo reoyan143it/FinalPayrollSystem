@@ -14,18 +14,15 @@ namespace FinalPayrollSystem.Models
         public string paytype { get; set; }
 
         [Required()]
+        [DataType(DataType.Currency, ErrorMessage ="It should be number!")]
         public decimal salary { get; set; }
-
-        [Required()]
-        public decimal dividedby { get; set; }
-
-        [Required()]
-        public double multipliedby { get; set; }
 
         [Required()]
         public string employeeid { get; set; }
 
         [Required()]
         public string employeename { get; set; } // NOT IN THE TABLE OF RATES, ONLY EMPLOYEE ID WILL BE SAVED
+
+        public IEnumerable<RatesModel> rateslist { get; set; }
     }
 }
