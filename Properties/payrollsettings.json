@@ -1,0 +1,38 @@
+{
+  "Code": "CEB",
+  "Company": "Rollway Group of Companies",
+  "Address": "777 Rollway Bldg. A.del Rosario St. Guizo Mandaue City Cebu",
+  "Telephone": "345-7594",
+  "TIN": "000-000-000-000",
+  "SSS": "123456789021",
+  "PhilHealth": "01123456789",
+  "VAT": "TX123456789",
+  "Payroll Information": {
+    "Employee Class": "Monthlies",
+    "DividedBy": 288,
+    "MultipliedBy": 12
+  },
+  "Premiums": {
+    "RegularOT": 1.25,
+    "RestDay": 1.50,
+    "RestDayOT": 1.65,
+    "Night Differential": 0.25,
+    "RegularHolidayWork": 1.25,
+    "RegularHolidayOT": 1.50,
+    "RDRHWork": 2.0,
+    "RDRHOT": 2.2,
+    "SpecialHolidayWork": 1.25,
+    "SpecialHolidayOT": 1.40,
+    "RDSHWork": 1.50,
+    "RDSHOT": 1.70
+  },
+  "Leaves": {
+    "SickLeave": 5,
+    "VacationLeave": 7,
+    "MaternityLeave": 60,
+    "PaternityLeave": 7,
+    "StudyLeave": 45,
+    "RehabilitationLeave": 10
+  }
+
+}

@@ -13,6 +13,6 @@
     <PackageReference Include="MySqlConnector" Version="2.0.0" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties properties_4payrollsettings_1json__JsonSchema="https://json.schemastore.org/config.json" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

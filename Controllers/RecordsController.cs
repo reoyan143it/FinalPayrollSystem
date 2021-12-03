@@ -12,10 +12,10 @@ using System.Globalization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Newtonsoft.Json.Serialization;
-using System.Web;
-using Newtonsoft.Json.Linq;
-using System.IO;
 using Newtonsoft.Json;
+using System.Web;
+using System.IO;
+
 
 namespace FinalPayrollSystem.Controllers
 {
@@ -468,14 +468,6 @@ namespace FinalPayrollSystem.Controllers
                         gender = reader["gender"].ToString(),
                         birthdate = Convert.ToDateTime(reader["birthdate"].ToString()),
                         datehired = Convert.ToDateTime(reader["datehired"].ToString()),
-                        //classofemployment = reader["classofemployment"].ToString(),
-                        //employeestatus = reader["employeestatus"].ToString(),
-                        //barangays = GetAddressInfos(Convert.ToInt32(reader["barangayid"]), reader.GetName(9).ToString()).ToString(),
-                        //towns = GetAddressInfos(Convert.ToInt32(reader["townid"]), reader.GetName(10).ToString()).ToString(),
-                        //cities = GetAddressInfos(Convert.ToInt32(reader["cityid"]), reader.GetName(11).ToString()).ToString(),
-                        //provinces = GetAddressInfos(Convert.ToInt32(reader["provinceid"]), reader.GetName(12).ToString()).ToString(),
-                        //department = GetAddressInfos(Convert.ToInt32(reader["departmentid"]), reader.GetName(13).ToString()).ToString(),
-                        //positions = GetAddressInfos(Convert.ToInt32(reader["positionid"]), reader.GetName(14).ToString()).ToString()
                     });
                 }
                 sqlConnect.CloseAsync();
@@ -488,6 +480,8 @@ namespace FinalPayrollSystem.Controllers
             return employeelist;
         }
 
+
+        // RATES ------------------------------------------------------------------------
         [HttpGet]
         public async Task<IActionResult> AddRates()
         {
@@ -754,7 +748,7 @@ namespace FinalPayrollSystem.Controllers
         }
 
         // RETURN THE STRING EMPLOYEE NAME OF THE SPECIFIED EMPLOYEE ID PARAMETER
-        public string EmployeeName(string employeeID)
+        private string EmployeeName(string employeeID)
         {
             string employeename = "";
 
@@ -778,7 +772,180 @@ namespace FinalPayrollSystem.Controllers
         }
 
 
+        // -------------------------------------------------------------------
 
 
+        [HttpGet]
+        public async Task<IActionResult> Leaves() 
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return Redirect("/Login/Index");
+            }
+
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Leaves(LeavesModel lv)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return Redirect("/Login/Index");
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    MySqlConnection dbcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
+                    await dbcon.OpenAsync();
+                    string commandtext = $"SELECT * FROM leavehistory WHERE employeeid='{lv.employeeid}' AND appliedleave='{lv.appliedleave}' AND leavedatefrom='{Convert.ToDateTime(lv.leavedatefrom).ToString("yyyy-MM-dd")}' OR leavedateto='{Convert.ToDateTime(lv.leavedateto).ToString("yyyy-MM-dd")}'";
+                    await using var cmd = new MySqlCommand(commandtext, dbcon);
+                    await using var reader = await cmd.ExecuteReaderAsync();
+
+                    if(await reader.ReadAsync())
+                    {
+                        TempData["Result"] = "Please checked the applied leave, it seems already existed!";
+                    }
+                    else
+                    {
+                        await reader.CloseAsync();
+                        await reader.DisposeAsync();
+                        await dbcon.CloseAsync();
+                        await dbcon.DisposeAsync();
+                        try
+                        {
+                            MySqlConnection dbcon1 = new MySqlConnection(_configuration.GetConnectionString("Default"));
+                            await dbcon1.OpenAsync();
+                            string commandtext1 = $@"INSERT INTO leavehistory (leavehistid,employeeid,employeename,appliedleave,rempaidleave,isdeductible,leavedatefrom,leavedateto,addedby,dateadded)
+                                                    VALUES(null,'{lv.employeeid}','{lv.employeename}','{lv.appliedleave}',{lv.rempaidleave},{lv.isdeductible},'{Convert.ToDateTime(lv.leavedatefrom).ToString("yyyy-MM-dd")}','{Convert.ToDateTime(lv.leavedateto).ToString("yyyy-MM-dd")}','{User.Identity.Name}','{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}')";
+                            await using var cmd1 = new MySqlCommand(commandtext1, dbcon1);
+                            var query = await cmd1.ExecuteNonQueryAsync();
+                            if(query > 0)
+                            {
+                                TempData["Result"] = "Applied Leave Successfully!";
+                            }
+                            else
+                            {
+                                TempData["Result"] = "Failed to apply leave!";
+                            }
+                            await dbcon1.CloseAsync();
+                            await dbcon1.DisposeAsync();
+                        }
+                        catch(Exception e)
+                        {
+                            TempData["Result"] = "Error: " + e.Message;
+                        }
+                    }
+                }
+                catch (Exception e) 
+                {
+                    TempData["Result"] = "Error: " + e.Message;
+                }
+
+            }
+            return Redirect("/Records/Leaves");
+        }
+
+
+        public async Task<JsonResult> lvEmpIDName(string employeeID)
+        {
+            List<EmployeeModel> lvlist = new List<EmployeeModel>();
+
+            MySqlConnection dbcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
+            await dbcon.OpenAsync();
+            string commandtext = $"SELECT firstname,lastname FROM employees WHERE employeeid='{employeeID}'";
+            await using var cmd = new MySqlCommand(commandtext, dbcon);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while(await reader.ReadAsync())
+            {
+                lvlist.Add(new EmployeeModel()
+                {
+                    firstname = reader["firstname"].ToString(),
+                    lastname = reader["lastname"].ToString()
+                });
+            }
+            await reader.CloseAsync();
+            await reader.DisposeAsync();
+            await dbcon.CloseAsync();
+            await dbcon.DisposeAsync();
+
+            return Json(lvlist);
+        }
+
+
+
+        [HttpPost("/Records/Leavelist")]
+        public IActionResult LeaveList()
+        {
+            try
+            {
+                LeavesModel lvmodel = new LeavesModel();
+                var draw = Request.Form["draw"].FirstOrDefault();
+                var start = Request.Form["start"].FirstOrDefault();
+                var length = Request.Form["length"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+                var userData = new List<LeavesModel>();
+
+
+                MySqlConnection dbcon = new MySqlConnection(_configuration.GetConnectionString("Default"));
+                dbcon.Open();
+                string commandtext = "SELECT leavehistid,employeeid,employeename,appliedleave,rempaidleave,isdeductible,leavedatefrom,leavedateto FROM leavehistory";
+                var cmd = new MySqlCommand(commandtext, dbcon);
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    userData.Add(new LeavesModel()
+                    {
+                        leavehistid = Convert.ToInt32(reader["leavehistid"]),
+                        employeeid = reader["employeeid"].ToString(),
+                        employeename = reader["employeename"].ToString(),
+                        appliedleave = reader["appliedleave"].ToString(),
+                        rempaidleave = Convert.ToInt32(reader["rempaidleave"]),
+                        isdeductible = Convert.ToBoolean(reader["isdeductible"]),
+                        leavedatefrom = Convert.ToDateTime(reader["leavedatefrom"]).ToShortDateString(),
+                        leavedateto = Convert.ToDateTime(reader["leavedateto"]).ToShortDateString()
+                    });
+                }
+                reader.Close();
+                reader.Dispose();
+                dbcon.Close();
+                dbcon.Dispose();
+
+                lvmodel.lvenum = userData;
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    lvmodel.sortdata = lvmodel.lvenum.OrderBy(s => sortColumn + " " + sortColumnDirection);
+                }
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    lvmodel.lvenum = lvmodel.lvenum.Where(m => m.employeeid.Contains(searchValue)
+                                                || m.employeename.Contains(searchValue)
+                                                || m.appliedleave.Contains(searchValue));
+                }
+
+                recordsTotal = lvmodel.lvenum.Count();
+                var data = lvmodel.lvenum.Skip(skip).Take(pageSize).ToList();
+                var jsondata = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+                return Ok(jsondata);
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+
+        }
     }
 }

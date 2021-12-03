@@ -14,7 +14,7 @@ $(document).ready(function () {
             $("#toModify").focusout(function () {
                 subs = $(this).val();
                 if (subs == tdval) {
-                    td.html(tdval);
+                    window.location.href = "/Records/AddRates";
                 } else {
 
                     while (subs.charAt(0) == 0) {

@@ -6,11 +6,12 @@
 $(document).ready(function () {
 
     $('.dropright a.submenu').on("mouseover", function (e) {
-        $(this).next('ul').toggle();
+        $('.dropright a.submenu').next('ul').slideUp(100);
+        $(this).next('ul').slideDown(100);
         e.stopPropagation();
     });
-    $('.dropright .dropdown-menu').mouseleave(function (e) {
-        $(this).slideUp(100);
+    $('.dropright').mouseleave(function (e) {
+        $(this).next('a.submenu').next('ul').slideUp(100);
         e.stopPropagation();
     });
     $('.dropdown a').click(function (e) {
